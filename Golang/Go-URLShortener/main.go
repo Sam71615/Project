@@ -3,10 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"hash/fnv"
 	"html/template"
 	"net/http"
-
-	"hash/fnv"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
