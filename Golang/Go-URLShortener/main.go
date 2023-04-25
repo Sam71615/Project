@@ -11,10 +11,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// 封裝請求
 type ShortenRequest struct {
 	URL string `json:"url"`
 }
 
+// 回應數據
 type ShortenResponse struct {
 	ShortURL string `json:"short_url"`
 }
@@ -36,9 +38,11 @@ func main() {
 	r.HandleFunc("/shorten", shortenHandler).Methods("POST")
 	r.HandleFunc("/{shortID}", redirectHandler).Methods("GET")
 
+	//啟動HTTP服務器
 	http.ListenAndServe(":8080", r)
 }
 
+// 調用輸入模板
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("home.html")
 	if err != nil {
@@ -53,6 +57,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// 短網址處理
 func shortenHandler(w http.ResponseWriter, r *http.Request) {
 	var req ShortenRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
@@ -67,7 +72,7 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 将长网址和短网址绑定存入 Redis 中
+	// 將長網址及短網址存入Redis 中
 	err = redisClient.Set(r.Context(), fmt.Sprintf("%x", shortID), req.URL, 0).Err()
 	if err != nil {
 		http.Error(w, "Error saving URL to Redis", http.StatusInternalServerError)
@@ -76,10 +81,12 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
 
 	shortURL := fmt.Sprintf("http://localhost:8080/%x", shortID)
 
+	//回應短網址
 	response := ShortenResponse{ShortURL: shortURL}
 	json.NewEncoder(w).Encode(response)
 }
 
+// 重定向處理，瀏覽器訪問短網址，從Redis查詢相對應的長網址，並返回給瀏覽器
 func redirectHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	shortID := vars["shortID"]
@@ -93,6 +100,7 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, longURL, http.StatusSeeOther)
 }
 
+// 生成短網址的哈希函數，將長網址轉成短網址
 func generateShortID(url string) (uint64, error) {
 	h := fnv.New64a()
 	_, err := h.Write([]byte(url))
