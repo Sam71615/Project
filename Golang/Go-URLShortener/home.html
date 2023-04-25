@@ -11,26 +11,32 @@
 		<input type="url" id="url-input" name="url">
 		<input type="submit" value="Shorten">
 	</form>
-
+	<!-- 顯示短網址 -->
 	<div id="shorten-result"></div>
 
 	<script>
+		//取得表單和短網址
 		const shortenForm = document.getElementById('shorten-form');
 		const shortenResult = document.getElementById('shorten-result');
-
+		
+		//表單提交時觸發的事件
 		shortenForm.addEventListener('submit', async (e) => {
 			e.preventDefault();
-			const url = shortenForm.elements['url'].value;
+			const url = shortenForm.elements['url'].value; //取得輸入的長網址
 
+			//像伺服器發送POST請求縮短網址
 			const response = await fetch('/shorten', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json' 
 				},
-				body: JSON.stringify({ url: url })
+				body: JSON.stringify({ url: url })//將長網址封裝載JSON中發送
 			});
 
+			// 解析伺服器回傳的 JSON 格式資料
 			const data = await response.json();
+			
+			// 將短網址顯示在網頁上
 			shortenResult.innerHTML = `Short URL: <a href="${data.short_url}">${data.short_url}</a>`;
 		});
 	</script>
