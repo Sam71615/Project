@@ -25,16 +25,8 @@
 1. Gorilla/mux：使用了 Gorilla/mux 路由器套件，方便管理和處理不同的 HTTP 請求和路由。
 1. Redis：使用 Redis 作為存儲服務，將長網址和短網址綁定存入 Redis 中，並透過 Redis 存取這些資料。
 1. JSON：使用 JSON 格式來處理請求和回應數據，包括獲取請求中的 URL，生成短網址等。
-1. HTML/CSS/JavaScript：使用了 HTML、CSS 和 JavaScript 實現了網站的前端介面和交互功能，包括輸入長網址、生成短網址、顯示短網址。
+1. HTML/CSS/JavaScript：使用了 HTML、CSS 和 JavaScript 呈現網站的前端介面和交互功能，包括輸入長網址、生成短網址、顯示短網址。
 
-
-**程式結構**  
-**前端：**  
-* home.html：呈現輸入介面。
-**後端：**  
-* main.go：主程式碼，包含路由和處理函數。
-* handlers.go：處理請求的函數。
-* models.go：請求和回應的數據結構。
 
 **如何運行**
 1. 安裝Redis。
